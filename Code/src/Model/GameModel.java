@@ -7,7 +7,10 @@ package Model;
  *
  */
 public class GameModel {
+	//board model of the game
+	private BoardModel board;
+	
 	public GameModel() {
-		//must implement
+		board = new BoardModel(this);
 	}
 }
