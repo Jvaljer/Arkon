@@ -18,13 +18,16 @@ public class GameModel {
 	private ArrayList<ArrayList<String>> map;
 	
 	public GameModel() {
-		map = ConvertMapFile("maps/initial_map.txt");
+		map = ConvertMapFile("maps/board_1.txt");
 		board = new BoardModel(this, map);
 	}
 	
-	//getters (yet for testing)
+	//getters
 	public ArrayList<ArrayList<String>> GetStrMap(){
 		return map;
+	}
+	public BoardModel GetBoard() {
+		return board;
 	}
 	
 	//other useful functions

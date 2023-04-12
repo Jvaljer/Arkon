@@ -16,7 +16,7 @@ public class BoardModel {
 	//game to which belongs this board
 	private GameModel game;
 	//board's grid
-	private ArrayList<ArrayList<SlotModel>> slot_grid;
+	private ArrayList<ArrayList<SlotModel>> slots_grid;
 	//board's power slots parameters
 	private ArrayList<Point> power_points;
 	//board's size parameters
@@ -26,13 +26,13 @@ public class BoardModel {
 	public BoardModel(GameModel GM, ArrayList<ArrayList<String>> map) {
 		game = GM;
 		
-		slot_grid = new ArrayList<ArrayList<SlotModel>>();
+		slots_grid = new ArrayList<ArrayList<SlotModel>>();
 		
 		for(int j=0; j<9; j++) {
 			ArrayList<SlotModel> model_line = new ArrayList<SlotModel>();
 			ArrayList<String> str_line = map.get(j);
 			for(int i=0; i<9; i++) {
-				Point coord = new Point(i,j);
+				Point coord = new Point(j,i);
 				switch (str_line.get(i)) {
 					case "D":
 						model_line.add(new SlotModel(this, SlotId.Dark, coord));
@@ -50,10 +50,27 @@ public class BoardModel {
 						break;
 				}
 			}
-			slot_grid.add(model_line);		
+			slots_grid.add(model_line);		
 		}
 
 		power_points = new ArrayList<Point>();
-		System.out.println("done with map initialization !");
+		power_points.add(new Point(0,4));
+		power_points.add(new Point(4,4));
+		power_points.add(new Point(8,4));
+		power_points.add(new Point(4,0));
+		power_points.add(new Point(4,8));
+		
+		System.out.println("done with board initialization");
+	}
+	
+	//getters
+	public int GetLines() {
+		return lines;
+	}
+	public int GetColumns() {
+		return columns;
+	}
+	public SlotModel GetSlotFromIndex(int i, int j) {
+		return slots_grid.get(i).get(j);
 	}
 }
