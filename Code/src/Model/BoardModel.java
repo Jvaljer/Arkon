@@ -39,7 +39,7 @@ public class BoardModel {
 			ArrayList<SlotModel> model_line = new ArrayList<SlotModel>();
 			ArrayList<String> str_line = map.get(j);
 			for(int i=0; i<9; i++) {
-				Point coord = new Point(j,i);
+				Point coord = new Point(i,j);
 				switch (str_line.get(i)) {
 					case "D":
 						model_line.add(new SlotModel(this, SlotId.Dark, coord));
@@ -90,7 +90,7 @@ public class BoardModel {
 		return slot_size;
 	}
 	public int GetTokensAmount() {
-		return 12;
+		return 18;
 	}
 	public ArrayList<TokenModel> GetLightTokens(){
 		return light_tokens;
@@ -106,14 +106,20 @@ public class BoardModel {
 			light_tokens.add(new TokenModel(this, new Point(1,k), TokenRole.Knight));
 			dark_tokens.add(new TokenModel(this, new Point(7,k), TokenRole.Goblin));
 		}
-		//creating all corner tokens
+		//creating all couples of tokens
 		for(int k=0; k<2; k++) {
-			light_tokens.add(new TokenModel(this, new Point(1,k*7), TokenRole.Valkyrie));
-			dark_tokens.add(new TokenModel(this, new Point(7,k*7), TokenRole.Manticore));
+			light_tokens.add(new TokenModel(this, new Point(1,k*8), TokenRole.Archer));
+			dark_tokens.add(new TokenModel(this, new Point(7,k*8), TokenRole.Manticore));
+			
+			light_tokens.add(new TokenModel(this, new Point(0,k*8), TokenRole.Valkyrie));
+			dark_tokens.add(new TokenModel(this, new Point(8,k*8), TokenRole.Banshee));
+			
+			light_tokens.add(new TokenModel(this, new Point(0,1+k*6), TokenRole.Golem));
+			dark_tokens.add(new TokenModel(this, new Point(8,1+k*6), TokenRole.Troll));
+			
+			light_tokens.add(new TokenModel(this, new Point(0,2+k*4), TokenRole.Unicorn));
+			dark_tokens.add(new TokenModel(this, new Point(8,2+k*4), TokenRole.Basilisk));
 		}
-		
-		//creating all other tokens by couple
-		
 		//creating 3 last tokens
 		light_tokens.add(new TokenModel(this, new Point(0,3), TokenRole.Djinn));
 		light_tokens.add(new TokenModel(this, new Point(0,4), TokenRole.Sorcerer));

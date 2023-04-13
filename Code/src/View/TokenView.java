@@ -12,7 +12,7 @@ public class TokenView {
 	//token model this view is referring to
 	private TokenModel model;
 	//image icon got from model's path (size of images is 32x32 px)
-	private static Image img;
+	private Image img;
 	//geometrical needed informations 
 	private Point center_pos;
 	
@@ -25,12 +25,12 @@ public class TokenView {
 			e.printStackTrace();
 		}
 		center_pos = new Point(
-				board.GetModel().GetGap() + model.GetPos().x * board.GetModel().GetSlotSize(),
-				board.GetModel().GetGap() + model.GetPos().y * board.GetModel().GetSlotSize() );
+				board.GetModel().GetGap() + (model.GetPos().x+1) * board.GetModel().GetSlotSize(),
+				board.GetModel().GetGap() + (model.GetPos().y+1) * board.GetModel().GetSlotSize() );
 	}
 	
 	//Draw method for the concerned token
 	public void Draw(Graphics G) {
-		G.drawImage(img,center_pos.x-32,center_pos.y-32, 32, 32, null);
+		G.drawImage(img,center_pos.x-50,center_pos.y-50, 50, 50, null);
 	}
 }

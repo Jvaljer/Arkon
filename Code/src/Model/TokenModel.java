@@ -18,7 +18,12 @@ public class TokenModel {
 	//alive predicate that tells if this token is alive or not
 	private boolean alive;
 	//path to the corresponding image
-	private static String img_path;
+	private String img_path;
+	//fighting attributes of the token
+	private int health_value;
+	private int atk_value;
+	private boolean range_atk;
+	private boolean fly;
 	
 	public TokenModel(BoardModel BM, Point P, TokenRole TR) {
 		board = BM;
@@ -35,6 +40,9 @@ public class TokenModel {
 	}
 	public Point GetPos() {
 		return pos;
+	}
+	public TokenRole GetRole() {
+		return role;
 	}
 	
 	//setter for the image's path to go
