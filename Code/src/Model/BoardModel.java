@@ -3,6 +3,7 @@ package Model;
 import java.util.*;
 
 import Types.SlotId;
+import Types.TokenRole;
 
 import java.awt.*;
 
@@ -24,6 +25,10 @@ public class BoardModel {
 	private final static int columns = 9;
 	//gap value to the sides of the frame
 	private final static int edge_gap = 25;
+	//list of all the light tokens 
+	private ArrayList<TokenModel> light_tokens;
+	//list of all the dark tokens
+	private ArrayList<TokenModel> dark_tokens;
 	
 	public BoardModel(GameModel GM, ArrayList<ArrayList<String>> map) {
 		game = GM;
@@ -62,7 +67,10 @@ public class BoardModel {
 		power_points.add(new Point(4,0));
 		power_points.add(new Point(4,8));
 		
-		System.out.println("done with board initialization");
+		light_tokens = new ArrayList<TokenModel>();
+		dark_tokens = new ArrayList<TokenModel>();
+		
+		CreateTokens();
 	}
 	
 	//getters
@@ -77,5 +85,30 @@ public class BoardModel {
 	}
 	public int GetGap() {
 		return edge_gap;
+	}
+	
+	//setters
+	private void CreateTokens() {
+		//creating all basic tokens
+		for(int k=1; k<lines-1; k++) {
+			light_tokens.add(new TokenModel(this, new Point(1,k), TokenRole.Knight));
+			dark_tokens.add(new TokenModel(this, new Point(7,k), TokenRole.Goblin));
+		}
+		//creating all corner tokens
+		for(int k=0; k<2; k++) {
+			light_tokens.add(new TokenModel(this, new Point(1,k*7), TokenRole.Valkyrie));
+			dark_tokens.add(new TokenModel(this, new Point(7,k*7), TokenRole.Manticore));
+		}
+		
+		//creating all other tokens by couple
+		
+		//creating 3 last tokens
+		light_tokens.add(new TokenModel(this, new Point(0,3), TokenRole.Djinn));
+		light_tokens.add(new TokenModel(this, new Point(0,4), TokenRole.Sorcerer));
+		light_tokens.add(new TokenModel(this, new Point(0,5), TokenRole.Phoenix));
+		
+		dark_tokens.add(new TokenModel(this, new Point(8,3), TokenRole.ShapeShifter));
+		dark_tokens.add(new TokenModel(this, new Point(8,4), TokenRole.Sorceress));
+		dark_tokens.add(new TokenModel(this, new Point(8,5), TokenRole.Dragon));
 	}
 }
