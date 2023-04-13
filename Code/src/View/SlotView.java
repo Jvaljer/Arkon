@@ -25,7 +25,7 @@ public class SlotView {
 		model = SM;
 		
 		side_len = model.GetSideLength();
-		center_pos = new Point(model.GetCoord().x - side_len/2, model.GetCoord().y - side_len/2);
+		center_pos = new Point(model.GetCoord().x*side_len - side_len/2, model.GetCoord().y*side_len - side_len/2);
 		color = SetColorFromId(model.GetId());
 	}
 	
@@ -41,5 +41,13 @@ public class SlotView {
 			default:
 				return (new Color(255,255,255));
 		}
+	}
+	
+	//Draw method for this slot
+	public void Draw(Graphics G) {
+		System.out.println("drawing the slot ("+model.GetCoord().x+","+model.GetCoord().y+")");
+		System.out.println("     its center point is : ("+center_pos.x+","+center_pos.y+")");
+		G.setColor(color);
+		G.fillRect(center_pos.x, center_pos.y, side_len, side_len);
 	}
 }

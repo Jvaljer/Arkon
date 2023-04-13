@@ -17,7 +17,7 @@ public class SlotModel {
 	//slot's coordinates inside the board
 	private Point coord;
 	//geometrical values
-	private final static int side_length = 30;
+	private final static int side_length = 50;
 	
 	public SlotModel(BoardModel BM, SlotId SI, Point P) {
 		board = BM;

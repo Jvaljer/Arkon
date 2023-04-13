@@ -3,6 +3,7 @@ package View;
 import javax.swing.JPanel;
 import Model.BoardModel;
 import java.util.*;
+import java.awt.*;
 
 /**
  * Board View Class, handling all the necessary stuff to properly display the game's board,
@@ -30,5 +31,23 @@ public class BoardView extends JPanel {
 			}
 			slots_grid.add(view_line);
 		}
+		
+		//now setting up the JPanel
+		setPreferredSize(new Dimension(475,475));
+	}
+	
+	//Draw method for the game's board
+	public void Draw(Graphics G) {
+		for(ArrayList<SlotView> line : slots_grid) {
+			for(SlotView slot : line) {
+				slot.Draw(G);
+			}
+		}
+	}
+	
+	@Override
+	public void paint(Graphics G) {
+		super.paint(G);
+		Draw(G);
 	}
 }

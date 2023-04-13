@@ -2,6 +2,7 @@ package Controler;
 
 import View.GameView;
 import Model.GameModel;
+import Threads.Refresh;
 
 /**
  * Controler class of our game, which will define all the behaviors we want our game to have, taking
@@ -18,5 +19,7 @@ public class GameCtrl {
 	public GameCtrl(GameView GV) {
 		view = GV;
 		model = view.GetModel();
+		
+		(new Refresh(view)).start();
 	}
 }

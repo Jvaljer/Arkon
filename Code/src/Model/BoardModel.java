@@ -22,6 +22,8 @@ public class BoardModel {
 	//board's size parameters
 	private final static int lines = 9;
 	private final static int columns = 9;
+	//gap value to the sides of the frame
+	private final static int edge_gap = 25;
 	
 	public BoardModel(GameModel GM, ArrayList<ArrayList<String>> map) {
 		game = GM;
@@ -72,5 +74,8 @@ public class BoardModel {
 	}
 	public SlotModel GetSlotFromIndex(int i, int j) {
 		return slots_grid.get(i).get(j);
+	}
+	public int GetGap() {
+		return edge_gap;
 	}
 }

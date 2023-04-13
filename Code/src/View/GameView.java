@@ -2,6 +2,7 @@ package View;
 
 import javax.swing.JFrame;
 import Model.GameModel;
+import java.awt.*;
 
 /**
  * View class of the game, which contains all we'll need to display the game correctly, and also allow 
@@ -25,11 +26,28 @@ public class GameView extends JFrame {
 		fighting = false;
 		
 		board = new BoardView(this,model.GetBoard());
-		//must implement
+		
+		//now setting up the frame 
+		setTitle("Arkon");
+		setLayout(new BorderLayout());
+		add(board);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		pack();
+		setVisible(true);
 	}
 	
 	//getters
 	public GameModel GetModel() {
 		return model;
+	}
+	public BoardView GetBoard() {
+		return board;
+	}
+	
+	@Override
+	public void paint(Graphics G) {
+		super.paint(G);
+		
+		board.Draw(G);
 	}
 }
