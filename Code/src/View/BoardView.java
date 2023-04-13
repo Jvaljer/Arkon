@@ -33,7 +33,11 @@ public class BoardView extends JPanel {
 		}
 		
 		//now setting up the JPanel
-		setPreferredSize(new Dimension(475,475));
+		setPreferredSize(new Dimension(500,500));
+	}
+	//getters
+	public BoardModel GetModel() {
+		return model;
 	}
 	
 	//Draw method for the game's board

@@ -25,7 +25,7 @@ public class SlotView {
 		model = SM;
 		
 		side_len = model.GetSideLength();
-		center_pos = new Point(model.GetCoord().x*side_len - side_len/2, model.GetCoord().y*side_len - side_len/2);
+		center_pos = new Point(model.GetCoord().x*side_len + board.GetModel().GetGap(), model.GetCoord().y*side_len + board.GetModel().GetGap());
 		color = SetColorFromId(model.GetId());
 	}
 	
