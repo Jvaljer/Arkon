@@ -14,12 +14,15 @@ import java.io.FileReader;
 public class GameModel {
 	//board model of the game
 	private BoardModel board;
+	//infobar model of the game
+	private InfobarModel infobar;
 	//string value to represent map's slots
 	private ArrayList<ArrayList<String>> map;
 	
 	public GameModel() {
 		map = ConvertMapFile("maps/board_1.txt");
 		board = new BoardModel(this, map);
+		infobar = new InfobarModel(this);
 	}
 	
 	//getters
@@ -28,6 +31,9 @@ public class GameModel {
 	}
 	public BoardModel GetBoard() {
 		return board;
+	}
+	public InfobarModel GetInfobar() {
+		return infobar;
 	}
 	
 	//other useful functions

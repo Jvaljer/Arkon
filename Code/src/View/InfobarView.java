@@ -22,5 +22,6 @@ public class InfobarView extends JPanel {
 		
 		//panel's initialization
 		setPreferredSize(new Dimension(game.getSize().width,model.GetPanelHeight()));
+		setBackground(new Color(100,150,150));
 	}
 }

@@ -15,6 +15,8 @@ public class GameView extends JFrame {
 	private GameModel model;
 	//view of the game's board
 	private BoardView board;
+	//view of the game's infobar
+	private InfobarView infobar;
 	//predicate to know which view we're in 
 	private boolean fighting;
 	
@@ -26,11 +28,14 @@ public class GameView extends JFrame {
 		fighting = false;
 		
 		board = new BoardView(this,model.GetBoard());
-		
+		infobar = new InfobarView(this,model.GetInfobar());
 		//now setting up the frame 
 		setTitle("Arkon");
 		setLayout(new BorderLayout());
-		add(board);
+		
+		add(board, BorderLayout.NORTH);
+		add(infobar, BorderLayout.SOUTH);
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
