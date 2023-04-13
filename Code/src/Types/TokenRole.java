@@ -29,4 +29,12 @@ public enum TokenRole {
 		name = str;
 		side = bin;
 	}
+	
+	//getters
+	public String Name() {
+		return name;
+	}
+	public int Side() {
+		return side;
+	}
 }

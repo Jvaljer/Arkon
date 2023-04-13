@@ -17,12 +17,41 @@ public class TokenModel {
 	private TokenRole role;
 	//alive predicate that tells if this token is alive or not
 	private boolean alive;
+	//path to the corresponding image
+	private static String img_path;
 	
 	public TokenModel(BoardModel BM, Point P, TokenRole TR) {
 		board = BM;
 		pos = P;
 		role = TR;
 		alive = true;
+		
+		img_path = SetImagePath();
 	}
 	
+	//getters
+	public String GetImagePath() {
+		return img_path;
+	}
+	public Point GetPos() {
+		return pos;
+	}
+	
+	//setter for the image's path to go
+	private String SetImagePath() {
+		String tok_name = role.Name();
+		String path;
+		switch (role.Side()) {
+			case 0:
+				path = "./images/Tokens/DarkSide/";
+				break;
+			case 1:
+				path = "./images/Tokens/LightSide/";
+				break;
+			default:
+				path = "";
+				break;
+		}
+		return (path+tok_name+".png");
+	}
 }

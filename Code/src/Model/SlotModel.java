@@ -17,12 +17,13 @@ public class SlotModel {
 	//slot's coordinates inside the board
 	private Point coord;
 	//geometrical values
-	private final static int side_length = 50;
+	private static int side_length;
 	
 	public SlotModel(BoardModel BM, SlotId SI, Point P) {
 		board = BM;
 		id = SI;
 		coord = P;
+		side_length = board.GetSlotSize();
 	}
 	
 	//getters

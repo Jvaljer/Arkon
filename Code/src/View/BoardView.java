@@ -18,6 +18,9 @@ public class BoardView extends JPanel {
 	private BoardModel model;
 	//grid of the slot's views
 	private ArrayList<ArrayList<SlotView>> slots_grid;
+	//list of all the light & dark tokens' views
+	private ArrayList<TokenView> light_tokens;
+	private ArrayList<TokenView> dark_tokens;
 	
 	public BoardView(GameView GV, BoardModel BM) {
 		game = GV;
@@ -32,6 +35,14 @@ public class BoardView extends JPanel {
 			slots_grid.add(view_line);
 		}
 		
+		light_tokens = new ArrayList<TokenView>();
+		dark_tokens = new ArrayList<TokenView>();
+		
+		for(int i=0; i<model.GetTokensAmount(); i++) {
+			light_tokens.add(new TokenView(this,model.GetLightTokens().get(i)));
+			dark_tokens.add(new TokenView(this,model.GetDarkTokens().get(i)));
+		}
+		
 		//now setting up the JPanel
 		setPreferredSize(new Dimension(500,500));
 	}
@@ -41,17 +52,30 @@ public class BoardView extends JPanel {
 	}
 	
 	//Draw method for the game's board
-	public void Draw(Graphics G) {
+	public void DrawBoard(Graphics G) {
 		for(ArrayList<SlotView> line : slots_grid) {
 			for(SlotView slot : line) {
 				slot.Draw(G);
 			}
 		}
 	}
+	//Draw method for the board's tokens
+	public void DrawTokens(Graphics G) {
+		for(int i=0; i<model.GetTokensAmount(); i++) {
+			light_tokens.get(i).Draw(G);
+			dark_tokens.get(i).Draw(G);
+		}
+	}
+	//DrawMethod for the whole board
+	public void Draw(Graphics G) {
+		DrawBoard(G);
+		DrawTokens(G);
+	}
 	
 	@Override
 	public void paint(Graphics G) {
 		super.paint(G);
-		Draw(G);
+		DrawBoard(G);
+		DrawTokens(G);
 	}
 }

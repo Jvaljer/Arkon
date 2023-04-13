@@ -23,11 +23,11 @@ public class BoardModel {
 	//board's size parameters
 	private final static int lines = 9;
 	private final static int columns = 9;
+	private final static int slot_size = 50;
 	//gap value to the sides of the frame
-	private final static int edge_gap = 25;
-	//list of all the light tokens 
+	private final static int edge_gap = slot_size/2;
+	//list of all the light & dark tokens' model
 	private ArrayList<TokenModel> light_tokens;
-	//list of all the dark tokens
 	private ArrayList<TokenModel> dark_tokens;
 	
 	public BoardModel(GameModel GM, ArrayList<ArrayList<String>> map) {
@@ -85,6 +85,18 @@ public class BoardModel {
 	}
 	public int GetGap() {
 		return edge_gap;
+	}
+	public int GetSlotSize() {
+		return slot_size;
+	}
+	public int GetTokensAmount() {
+		return 12;
+	}
+	public ArrayList<TokenModel> GetLightTokens(){
+		return light_tokens;
+	}
+	public ArrayList<TokenModel> GetDarkTokens(){
+		return dark_tokens;
 	}
 	
 	//setters
