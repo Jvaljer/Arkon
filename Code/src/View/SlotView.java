@@ -45,8 +45,6 @@ public class SlotView {
 	
 	//Draw method for this slot
 	public void Draw(Graphics G) {
-		System.out.println("drawing the slot ("+model.GetCoord().x+","+model.GetCoord().y+")");
-		System.out.println("     its center point is : ("+center_pos.x+","+center_pos.y+")");
 		G.setColor(color);
 		G.fillRect(center_pos.x, center_pos.y, side_len, side_len);
 	}

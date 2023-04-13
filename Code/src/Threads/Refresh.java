@@ -4,21 +4,25 @@ import View.BoardView;
 import View.GameView;
 
 public class Refresh extends Thread {
+	private GameView game_view;
 	private BoardView board_view;
 	
 	public Refresh(GameView GV) {
-		board_view = GV.GetBoard();
+		game_view = GV;
+		board_view = game_view.GetBoard();
 	}
 	
 	@Override
 	public void run() {
-		board_view.revalidate();
-		board_view.repaint();
-		
-		try {
-			Thread.sleep(60);
-		} catch (Exception e) {
-			e.printStackTrace();
+		while(true) {
+			board_view.revalidate();
+			board_view.repaint();
+			
+			try {
+				Thread.sleep(60);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
