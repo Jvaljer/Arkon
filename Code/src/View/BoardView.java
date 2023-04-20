@@ -39,8 +39,6 @@ public class BoardView extends JPanel {
 		dark_tokens = new ArrayList<TokenView>();
 		
 		for(int i=0; i<model.GetTokensAmount(); i++) {
-			System.out.println(model.GetLightTokens().get(i).GetRole().Name());
-			System.out.println(model.GetDarkTokens().get(i).GetRole().Name());
 			light_tokens.add(new TokenView(this,model.GetLightTokens().get(i)));
 			dark_tokens.add(new TokenView(this,model.GetDarkTokens().get(i)));
 		}
