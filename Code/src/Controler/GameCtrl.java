@@ -11,7 +11,7 @@ import Threads.Refresh;
  * @author abel
  *
  */
-public class GameCtrl {
+public class GameCtrl extends Thread {
 	//game's model & view which we'll take our informations and modify throughout this class
 	private GameModel model;
 	private GameView view;
@@ -19,7 +19,14 @@ public class GameCtrl {
 	public GameCtrl(GameView GV) {
 		view = GV;
 		model = view.GetModel();
-		
+		view.GetBoard().addKeyListener(new BoardCtrl(this, view.GetBoard()));
+		view.GetBoard().setFocusable(true);
 		(new Refresh(view)).start();
+	}
+	
+	@Override
+	public void run() {
+		//must implement
+		return;
 	}
 }

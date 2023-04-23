@@ -16,6 +16,8 @@ import java.awt.*;
 public class BoardModel {
 	//game to which belongs this board
 	private GameModel game;
+	//selector model
+	private SelectorModel selector;
 	//board's grid
 	private ArrayList<ArrayList<SlotModel>> slots_grid;
 	//board's power slots parameters
@@ -25,10 +27,12 @@ public class BoardModel {
 	private final static int columns = 9;
 	private final static int slot_size = 50;
 	//gap value to the sides of the frame
-	private final static int edge_gap = slot_size/2;
+	private final static int edge_gap = slot_size;
 	//list of all the light & dark tokens' model
 	private ArrayList<TokenModel> light_tokens;
 	private ArrayList<TokenModel> dark_tokens;
+	//playing side -> 0 for light, 1 for dark
+	private int playing_side;
 	
 	public BoardModel(GameModel GM, ArrayList<ArrayList<String>> map) {
 		game = GM;
@@ -70,6 +74,8 @@ public class BoardModel {
 		light_tokens = new ArrayList<TokenModel>();
 		dark_tokens = new ArrayList<TokenModel>();
 		
+		selector = new SelectorModel(this);
+		
 		CreateTokens();
 	}
 	
@@ -97,6 +103,12 @@ public class BoardModel {
 	}
 	public ArrayList<TokenModel> GetDarkTokens(){
 		return dark_tokens;
+	}
+	public int PlayingSide() {
+		return playing_side;
+	}
+	public SelectorModel GetSelector() {
+		return selector;
 	}
 	
 	//setters

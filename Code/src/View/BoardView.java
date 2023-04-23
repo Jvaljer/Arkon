@@ -14,6 +14,8 @@ import java.awt.*;
 public class BoardView extends JPanel {
 	//game's view this panel belongs to
 	private GameView game;
+	//Selector view 
+	private SelectorView selector;
 	//board model on which is based this view
 	private BoardModel model;
 	//grid of the slot's views
@@ -43,12 +45,17 @@ public class BoardView extends JPanel {
 			dark_tokens.add(new TokenView(this,model.GetDarkTokens().get(i)));
 		}
 		
+		selector = new SelectorView(this, model.GetSelector());
+		
 		//now setting up the JPanel
-		setPreferredSize(new Dimension(500,500));
+		setPreferredSize(new Dimension(550,550));
 	}
 	//getters
 	public BoardModel GetModel() {
 		return model;
+	}
+	public SelectorView GetSelector() {
+		return selector;
 	}
 	
 	//Draw method for the game's board
@@ -66,10 +73,12 @@ public class BoardView extends JPanel {
 			dark_tokens.get(i).Draw(G);
 		}
 	}
+
 	//DrawMethod for the whole board
 	public void Draw(Graphics G) {
 		DrawBoard(G);
 		DrawTokens(G);
+		selector.Draw(G);
 	}
 	
 	@Override
@@ -77,5 +86,6 @@ public class BoardView extends JPanel {
 		super.paint(G);
 		DrawBoard(G);
 		DrawTokens(G);
+		selector.Draw(G);
 	}
 }
