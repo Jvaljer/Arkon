@@ -24,7 +24,12 @@ public class SelectorView {
 		int x_pos = x_coord*slot_size + board.GetModel().GetGap();
 		int y_pos = y_coord*slot_size + board.GetModel().GetGap();
 
-		G.setColor(Color.RED);
+		G.setColor(Color.BLACK);
+		G.drawRect(x_pos-2, y_pos-2, slot_size+4, slot_size+4);
+		G.drawRect(x_pos+2, y_pos+2, slot_size-4, slot_size-4);
+		G.setColor(board.GetTurnColor());
+		G.drawRect(x_pos-1, y_pos-1, slot_size+2, slot_size+2);
+		G.drawRect(x_pos+1, y_pos+1, slot_size-2, slot_size-2);
 		G.drawRect(x_pos, y_pos, slot_size, slot_size);
 	}
 }

@@ -2,6 +2,8 @@ package View;
 
 import javax.swing.JPanel;
 import Model.BoardModel;
+import Types.SlotId;
+
 import java.util.*;
 import java.awt.*;
 
@@ -56,6 +58,20 @@ public class BoardView extends JPanel {
 	}
 	public SelectorView GetSelector() {
 		return selector;
+	}
+	public Color GetTurnColor() {
+		Color color;
+		if(model.PlayingSide()==0) {
+			//light is playing
+			color = new Color(255, 255, 204);
+		} else if(model.PlayingSide()==1) {
+			//dark is playing
+			color = new Color(0, 153, 0);
+		} else {
+			//error ? 
+			color = null;
+		}
+		return color;
 	}
 	
 	//Draw method for the game's board

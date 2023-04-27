@@ -3,6 +3,8 @@ package Controler;
 import View.GameView;
 import Model.GameModel;
 import Threads.Refresh;
+import Model.SlotModel;
+import Model.TokenModel;
 
 /**
  * Controler class of our game, which will define all the behaviors we want our game to have, taking
@@ -22,6 +24,11 @@ public class GameCtrl extends Thread {
 		view.GetBoard().addKeyListener(new BoardCtrl(this, view.GetBoard()));
 		view.GetBoard().setFocusable(true);
 		(new Refresh(view)).start();
+	}
+	
+	public void SelectToken(SlotModel slot) {
+		//must implement
+		return;
 	}
 	
 	@Override

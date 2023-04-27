@@ -2,6 +2,7 @@ package Model;
 
 import java.util.*;
 
+import Types.SelectState;
 import Types.SlotId;
 import Types.TokenRole;
 
@@ -33,6 +34,8 @@ public class BoardModel {
 	private ArrayList<TokenModel> dark_tokens;
 	//playing side -> 0 for light, 1 for dark
 	private int playing_side;
+	//board's selection state 
+	public SelectState select_state;
 	
 	public BoardModel(GameModel GM, ArrayList<ArrayList<String>> map) {
 		game = GM;
@@ -76,6 +79,8 @@ public class BoardModel {
 		
 		selector = new SelectorModel(this);
 		
+		select_state = SelectState.None;
+		
 		CreateTokens();
 	}
 	
@@ -111,6 +116,26 @@ public class BoardModel {
 		return selector;
 	}
 	
+	public TokenModel GetTokenFromSlot(SlotModel slot) {
+		if(TokenOnSlot(slot)) {
+			for(TokenModel tok : dark_tokens) {
+				if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
+					return tok;
+				}
+			}
+			for(TokenModel tok : dark_tokens) {
+				if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
+					return tok;
+				}
+			}
+			
+			return null;
+			
+		}
+		
+		return null;
+	}
+	
 	//setters
 	private void CreateTokens() {
 		//creating all basic tokens
@@ -140,5 +165,23 @@ public class BoardModel {
 		dark_tokens.add(new TokenModel(this, new Point(8,3), TokenRole.ShapeShifter));
 		dark_tokens.add(new TokenModel(this, new Point(8,4), TokenRole.Sorceress));
 		dark_tokens.add(new TokenModel(this, new Point(8,5), TokenRole.Dragon));
+	}
+	public void SetSelectState(SelectState state) {
+		select_state = state;
+	}
+	
+	//predicates and methods
+	public boolean TokenOnSlot(SlotModel slot) {
+		for(TokenModel tok : light_tokens) {
+			if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
+				return true;
+			}
+		}
+		for(TokenModel tok : dark_tokens) {
+			if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

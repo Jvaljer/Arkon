@@ -35,6 +35,15 @@ public class GameModel {
 	public InfobarModel GetInfobar() {
 		return infobar;
 	}
+	public TokenModel GetTokenOnSlot(SlotModel slot){
+		for(TokenModel tok : board.GetDarkTokens()) {
+			if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
+				return tok;
+			}
+		}
+		//must replace this with a thrown error
+		return null;
+	}
 	
 	//other useful functions
 	public ArrayList<ArrayList<String>> ConvertMapFile(String path){

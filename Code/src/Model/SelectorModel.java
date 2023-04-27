@@ -45,7 +45,7 @@ public class SelectorModel {
 	
 	//setters
 	public void SetSelected(Point coord) {
-		selected = board.GetSlotFromIndex(coord.x, coord.y);
+		selected = board.GetSlotFromIndex(coord.y, coord.x);
 	}
 }
 
