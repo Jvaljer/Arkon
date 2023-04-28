@@ -85,8 +85,17 @@ public class BoardView extends JPanel {
 	//Draw method for the board's tokens
 	public void DrawTokens(Graphics G) {
 		for(int i=0; i<model.GetTokensAmount(); i++) {
-			light_tokens.get(i).Draw(G);
-			dark_tokens.get(i).Draw(G);
+			if(!light_tokens.get(i).GetModel().IsMoving()) {
+				light_tokens.get(i).Draw(G);
+			} else {
+				light_tokens.get(i).DrawMoving(G);
+			}
+			
+			if(!dark_tokens.get(i).GetModel().IsMoving()) {
+				dark_tokens.get(i).Draw(G);
+			} else {
+				dark_tokens.get(i).DrawMoving(G);
+			}
 		}
 	}
 

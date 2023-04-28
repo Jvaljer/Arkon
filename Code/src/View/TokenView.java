@@ -26,11 +26,20 @@ public class TokenView {
 		}
 		center_pos = new Point(
 				board.GetModel().GetGap() + (model.GetPos().x+1) * board.GetModel().GetSlotSize(),
-				board.GetModel().GetGap() + (model.GetPos().y+1) * board.GetModel().GetSlotSize() );
+				board.GetModel().GetGap() + (model.GetPos().y+1) * board.GetModel().GetSlotSize() 
+		);
+	}
+	
+	//getter
+	public TokenModel GetModel() {
+		return model;
 	}
 	
 	//Draw method for the concerned token
 	public void Draw(Graphics G) {
 		G.drawImage(img,center_pos.x-50,center_pos.y-50, 50, 50, null);
+	}
+	public void DrawMoving(Graphics G) {
+		G.drawImage(img, model.GetMovingPos().x -50, model.GetMovingPos().y -50, 50, 50, null);
 	}
 }

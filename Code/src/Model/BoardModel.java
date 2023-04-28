@@ -117,14 +117,18 @@ public class BoardModel {
 	}
 	
 	public TokenModel GetTokenFromSlot(SlotModel slot) {
+		System.out.println("GETTOKENFROMSLOT STARTING");
 		if(TokenOnSlot(slot)) {
+			System.out.println("There's well a token on this slot ");
 			for(TokenModel tok : dark_tokens) {
 				if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
+					System.out.println("this is a black token ");
 					return tok;
 				}
 			}
-			for(TokenModel tok : dark_tokens) {
+			for(TokenModel tok : light_tokens) {
 				if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
+					System.out.println("this is a light token");
 					return tok;
 				}
 			}

@@ -13,10 +13,14 @@ public class TokenModel {
 	private BoardModel board;
 	//token's position on the board
 	private Point pos;
+	//token's moving pos (visual pos on board in pixel) 
+	private Point moving_pos;
 	//token's role
 	private TokenRole role;
 	//alive predicate that tells if this token is alive or not
 	private boolean alive;
+	//moving predicate that tells if this token is moving or not
+	private boolean moving;
 	//path to the corresponding image
 	private String img_path;
 	//fighting attributes of the token
@@ -28,8 +32,10 @@ public class TokenModel {
 	public TokenModel(BoardModel BM, Point P, TokenRole TR) {
 		board = BM;
 		pos = P;
+		moving_pos = pos;
 		role = TR;
 		alive = true;
+		moving = false;
 		
 		img_path = SetImagePath();
 	}
@@ -41,8 +47,14 @@ public class TokenModel {
 	public Point GetPos() {
 		return pos;
 	}
+	public Point GetMovingPos() {
+		return moving_pos;
+	}
 	public TokenRole GetRole() {
 		return role;
+	}
+	public boolean IsMoving() {
+		return moving;
 	}
 	
 	//setter for the image's path to go
@@ -61,5 +73,21 @@ public class TokenModel {
 				break;
 		}
 		return (path+tok_name+".png");
+	}
+	
+	public void StartsMoving() {
+		moving = true;
+	}
+	public void StopsMoving() {
+		moving = false;
+	}
+	
+	public void IncrementMovingPos(Point direction) {
+		Point old = new Point(moving_pos.x,moving_pos.y);
+		moving_pos = new Point(old.x+direction.x, old.y+direction.y);
+	}
+	
+	public void MoveTo(Point dst) {
+		pos = dst;
 	}
 }
