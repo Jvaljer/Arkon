@@ -7,6 +7,7 @@ import Types.SlotId;
 import Types.TokenRole;
 
 import java.awt.*;
+import Types.CustomException;
 
 /**
  * Board Model class, containing all the informations related to the game's board
@@ -37,7 +38,7 @@ public class BoardModel {
 	//board's selection state 
 	public SelectState select_state;
 	
-	public BoardModel(GameModel GM, ArrayList<ArrayList<String>> map) {
+	public BoardModel(GameModel GM, ArrayList<ArrayList<String>> map) throws CustomException {
 		game = GM;
 		
 		slots_grid = new ArrayList<ArrayList<SlotModel>>();
@@ -61,7 +62,7 @@ public class BoardModel {
 						break;
 						
 					default:
-						break;
+						throw new CustomException("ERROR-> character from the map file wasn't recognized : "+str_line.get(i));
 				}
 			}
 			slots_grid.add(model_line);		
@@ -116,7 +117,7 @@ public class BoardModel {
 		return selector;
 	}
 	
-	public TokenModel GetTokenFromSlot(SlotModel slot) {
+	public TokenModel GetTokenFromSlot(SlotModel slot) throws CustomException {
 		System.out.println("GETTOKENFROMSLOT STARTING");
 		if(TokenOnSlot(slot)) {
 			System.out.println("There's well a token on this slot ");
@@ -133,42 +134,53 @@ public class BoardModel {
 				}
 			}
 			
-			return null;
-			
+			throw new CustomException("ERROR-> there's a token on the slot that hasn't been recognized");
 		}
 		
-		return null;
+		throw new CustomException("ERROR-> there is not any token on this slot");
 	}
 	
 	//setters
 	private void CreateTokens() {
 		//creating all basic tokens
 		for(int k=1; k<lines-1; k++) {
-			light_tokens.add(new TokenModel(this, new Point(1,k), TokenRole.Knight));
-			dark_tokens.add(new TokenModel(this, new Point(7,k), TokenRole.Goblin));
+			try {
+				light_tokens.add(new TokenModel(this, new Point(1,k), TokenRole.Knight));
+				dark_tokens.add(new TokenModel(this, new Point(7,k), TokenRole.Goblin));
+			} catch (CustomException c_e) {
+				c_e.printStackTrace();
+			}
 		}
 		//creating all couples of tokens
 		for(int k=0; k<2; k++) {
-			light_tokens.add(new TokenModel(this, new Point(1,k*8), TokenRole.Archer));
-			dark_tokens.add(new TokenModel(this, new Point(7,k*8), TokenRole.Manticore));
-			
-			light_tokens.add(new TokenModel(this, new Point(0,k*8), TokenRole.Valkyrie));
-			dark_tokens.add(new TokenModel(this, new Point(8,k*8), TokenRole.Banshee));
-			
-			light_tokens.add(new TokenModel(this, new Point(0,1+k*6), TokenRole.Golem));
-			dark_tokens.add(new TokenModel(this, new Point(8,1+k*6), TokenRole.Troll));
-			
-			light_tokens.add(new TokenModel(this, new Point(0,2+k*4), TokenRole.Unicorn));
-			dark_tokens.add(new TokenModel(this, new Point(8,2+k*4), TokenRole.Basilisk));
+			try {
+				light_tokens.add(new TokenModel(this, new Point(1,k*8), TokenRole.Archer));
+				dark_tokens.add(new TokenModel(this, new Point(7,k*8), TokenRole.Manticore));
+				
+				light_tokens.add(new TokenModel(this, new Point(0,k*8), TokenRole.Valkyrie));
+				dark_tokens.add(new TokenModel(this, new Point(8,k*8), TokenRole.Banshee));
+				
+				light_tokens.add(new TokenModel(this, new Point(0,1+k*6), TokenRole.Golem));
+				dark_tokens.add(new TokenModel(this, new Point(8,1+k*6), TokenRole.Troll));
+				
+				light_tokens.add(new TokenModel(this, new Point(0,2+k*4), TokenRole.Unicorn));
+				dark_tokens.add(new TokenModel(this, new Point(8,2+k*4), TokenRole.Basilisk));
+			} catch(CustomException c_e) {
+				c_e.printStackTrace();
+			}
 		}
 		//creating 3 last tokens
-		light_tokens.add(new TokenModel(this, new Point(0,3), TokenRole.Djinn));
-		light_tokens.add(new TokenModel(this, new Point(0,4), TokenRole.Sorcerer));
-		light_tokens.add(new TokenModel(this, new Point(0,5), TokenRole.Phoenix));
-		
-		dark_tokens.add(new TokenModel(this, new Point(8,3), TokenRole.ShapeShifter));
-		dark_tokens.add(new TokenModel(this, new Point(8,4), TokenRole.Sorceress));
-		dark_tokens.add(new TokenModel(this, new Point(8,5), TokenRole.Dragon));
+		try {
+			light_tokens.add(new TokenModel(this, new Point(0,3), TokenRole.Djinn));
+			light_tokens.add(new TokenModel(this, new Point(0,4), TokenRole.Sorcerer));
+			light_tokens.add(new TokenModel(this, new Point(0,5), TokenRole.Phoenix));
+			
+			dark_tokens.add(new TokenModel(this, new Point(8,3), TokenRole.ShapeShifter));
+			dark_tokens.add(new TokenModel(this, new Point(8,4), TokenRole.Sorceress));
+			dark_tokens.add(new TokenModel(this, new Point(8,5), TokenRole.Dragon));
+		} catch (CustomException c_e) {
+			c_e.printStackTrace();
+		}
 	}
 	public void SetSelectState(SelectState state) {
 		select_state = state;

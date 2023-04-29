@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.*;
+import Types.CustomException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.FileReader;
@@ -21,7 +22,11 @@ public class GameModel {
 	
 	public GameModel() {
 		map = ConvertMapFile("maps/board_1.txt");
-		board = new BoardModel(this, map);
+		try {
+			board = new BoardModel(this, map);
+		} catch (CustomException c_e) {
+			c_e.printStackTrace();
+		}
 		infobar = new InfobarModel(this);
 	}
 	
@@ -35,14 +40,14 @@ public class GameModel {
 	public InfobarModel GetInfobar() {
 		return infobar;
 	}
-	public TokenModel GetTokenOnSlot(SlotModel slot){
+	public TokenModel GetTokenOnSlot(SlotModel slot) throws CustomException {
 		for(TokenModel tok : board.GetDarkTokens()) {
 			if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
 				return tok;
 			}
 		}
 		//must replace this with a thrown error
-		return null;
+		throw new CustomException("ERROR-> not any token on the slot when there was one supposed to be");
 	}
 	
 	//other useful functions

@@ -2,6 +2,7 @@ package Model;
 
 import java.awt.*;
 import Types.TokenRole;
+import Types.CustomException;
 
 /**
  * Token Model class, that contains all the necessary informations and values concerning a token on the board
@@ -29,7 +30,7 @@ public class TokenModel {
 	private boolean range_atk;
 	private boolean fly;
 	
-	public TokenModel(BoardModel BM, Point P, TokenRole TR) {
+	public TokenModel(BoardModel BM, Point P, TokenRole TR) throws CustomException {
 		board = BM;
 		pos = P;
 		//here we wanna translate the pos (in coordinates) into a moving pos (in piexels)
@@ -62,7 +63,7 @@ public class TokenModel {
 	}
 	
 	//setter for the image's path to go
-	private String SetImagePath() {
+	private String SetImagePath() throws CustomException{
 		String tok_name = role.Name();
 		String path;
 		switch (role.Side()) {
@@ -73,8 +74,7 @@ public class TokenModel {
 				path = "./images/Tokens/LightSide/";
 				break;
 			default:
-				path = "";
-				break;
+				throw new CustomException("ERROR-> there was no indicated path to fetch image");
 		}
 		return (path+tok_name+".png");
 	}

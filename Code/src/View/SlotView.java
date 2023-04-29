@@ -2,6 +2,8 @@ package View;
 
 import Model.SlotModel;
 import java.awt.*;
+
+import Types.CustomException;
 import Types.SlotId;
 
 /**
@@ -26,11 +28,15 @@ public class SlotView {
 		
 		side_len = model.GetSideLength();
 		center_pos = new Point(model.GetCoord().x*side_len + board.GetModel().GetGap(), model.GetCoord().y*side_len + board.GetModel().GetGap());
-		color = SetColorFromId(model.GetId());
+		try {
+			color = SetColorFromId(model.GetId());
+		} catch (CustomException c_e) {
+			c_e.printStackTrace();
+		}
 	}
 	
 	//setters
-	public Color SetColorFromId(SlotId sid) {
+	public Color SetColorFromId(SlotId sid) throws CustomException {
 		switch (sid) {
 			case Dark:
 				return (new Color(50,100,150));
@@ -39,7 +45,7 @@ public class SlotView {
 			case Lumina:
 				return (new Color(0,0,255));
 			default:
-				return (new Color(255,255,255));
+				throw new CustomException("ERROR-> the id of the slot isn't a known value");
 		}
 	}
 	

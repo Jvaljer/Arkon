@@ -1,6 +1,7 @@
 package Model;
 
 import java.awt.*;
+import Types.CustomException;
 
 /**
  * Selector Model Class, containing all the needed informations to define and interact with the slot's selector
@@ -19,7 +20,7 @@ public class SelectorModel {
 	private static Color playing_col;
 	
 	//Constructor
-	public SelectorModel(BoardModel BM) {
+	public SelectorModel(BoardModel BM) throws CustomException {
 		board = BM;
 		selected = new SlotModel(board,null, new Point(0,0));
 		selector_size = board.GetSlotSize();
@@ -31,7 +32,7 @@ public class SelectorModel {
 				playing_col = Color.GREEN;
 				break;
 			default:
-				break;
+				throw new CustomException("ERROR-> the playing_side isn't a known value");
 		}
 	}
 	

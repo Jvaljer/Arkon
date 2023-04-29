@@ -11,6 +11,7 @@ import Model.TokenModel;
 import Types.TokenRole;
 import Types.SelectState;
 import Threads.MoveToken;
+import Types.CustomException;
 
 public class BoardCtrl implements KeyListener {
 	private GameCtrl game;
@@ -85,7 +86,7 @@ public class BoardCtrl implements KeyListener {
 		}
 	}
 	
-	public void SelectPressed() {
+	public void SelectPressed() throws CustomException {
 		SelectorModel selector = model.GetSelector();
 		//if X is pressed, then we wanna know if it's the first time or not
 		if(!fst_select) {
@@ -100,13 +101,12 @@ public class BoardCtrl implements KeyListener {
 					break;
 				case Spell:
 					break;
+					
 				default:
-					break;
+					throw new CustomException("ERROR-> the select stae wasn't one of the knew ones");
 			}
 		} else {
 			System.out.println("First select");
-			//if this keystroke is to make the first select then just initiate the select procedure
-			fst_select = false;
 			//then we wanna set a state for the board 
 			//possible states are : 
 				//Token Selected -> we are simply gonna move it 
@@ -114,6 +114,7 @@ public class BoardCtrl implements KeyListener {
 			SlotModel slot = selector.GetSelected();
 			TokenModel tok = model.GetTokenFromSlot(slot);
 			if(tok!=null) {
+				fst_select = false;
 				selected_tok = tok;
 				if(selected_tok.GetRole()==TokenRole.Sorcerer || selected_tok.GetRole()==TokenRole.Sorceress) {
 					model.SetSelectState(SelectState.Spell);
@@ -142,7 +143,11 @@ public class BoardCtrl implements KeyListener {
 		} else if(e.getKeyCode()==KeyEvent.VK_RIGHT && !occupied) {
 			RightPressed();
 		} else if(e.getKeyCode()==KeyEvent.VK_X && !occupied) {
-			SelectPressed();
+			try {
+				SelectPressed();
+			} catch (CustomException c_e) {
+				c_e.printStackTrace();
+			}
 		} else if(e.getKeyCode()==KeyEvent.VK_A && !occupied) {
 			CancelPressed();
 		}

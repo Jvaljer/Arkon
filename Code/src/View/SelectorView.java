@@ -1,6 +1,8 @@
 package View;
 
 import Model.SelectorModel;
+import Types.CustomException;
+
 import java.awt.*;
 
 public class SelectorView {
@@ -27,7 +29,11 @@ public class SelectorView {
 		G.setColor(Color.BLACK);
 		G.drawRect(x_pos-2, y_pos-2, slot_size+4, slot_size+4);
 		G.drawRect(x_pos+2, y_pos+2, slot_size-4, slot_size-4);
-		G.setColor(board.GetTurnColor());
+		try {
+			G.setColor(board.GetTurnColor());
+		} catch (CustomException c_e) {
+			c_e.printStackTrace();
+		}
 		G.drawRect(x_pos-1, y_pos-1, slot_size+2, slot_size+2);
 		G.drawRect(x_pos+1, y_pos+1, slot_size-2, slot_size-2);
 		G.drawRect(x_pos, y_pos, slot_size, slot_size);

@@ -6,6 +6,7 @@ import Types.SlotId;
 
 import java.util.*;
 import java.awt.*;
+import Types.CustomException;
 
 /**
  * Board View Class, handling all the necessary stuff to properly display the game's board,
@@ -59,7 +60,7 @@ public class BoardView extends JPanel {
 	public SelectorView GetSelector() {
 		return selector;
 	}
-	public Color GetTurnColor() {
+	public Color GetTurnColor() throws CustomException {
 		Color color;
 		if(model.PlayingSide()==0) {
 			//light is playing
@@ -68,8 +69,7 @@ public class BoardView extends JPanel {
 			//dark is playing
 			color = new Color(0, 153, 0);
 		} else {
-			//error ? 
-			color = null;
+			throw new CustomException("ERROR-> the playing_side isn't a known value");
 		}
 		return color;
 	}
