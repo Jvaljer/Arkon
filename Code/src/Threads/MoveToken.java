@@ -21,9 +21,8 @@ public class MoveToken extends Thread {
 	
 	@Override
 	public void run() {
-		System.out.println("MoveToken threads starts");
-		System.out.println("token is currently on slot : "+token.GetPos());
 		int s = board.GetModel().GetSlotSize();
+		board.occupied = true;
 		token.StartsMoving();
 		for(int i=0; i<s; i++) {
 			//for each pixel separating two board's slots
@@ -36,7 +35,7 @@ public class MoveToken extends Thread {
 			}
 		}
 		token.StopsMoving();
+		board.occupied = false;
 		token.MoveTo(destination);
-		System.out.println("now token is on slot : "+destination);
 	}
 }

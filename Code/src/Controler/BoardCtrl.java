@@ -20,11 +20,14 @@ public class BoardCtrl implements KeyListener {
 	private boolean fst_select;
 	private TokenModel selected_tok;
 	
+	public boolean occupied;
+	
 	public BoardCtrl(GameCtrl GC, BoardView BV) {
 		game = GC;
 		view = BV;
 		model = view.GetModel();
 		fst_select = true;
+		occupied = false;
 	}
 	
 	//getters
@@ -49,16 +52,26 @@ public class BoardCtrl implements KeyListener {
 		}
 	}
 	public void DownPressed() {
-		SelectorModel selector = model.GetSelector();
-		Point old_select = selector.GetSelected().GetCoord();
-		Point new_select = new Point(old_select.x, old_select.y +1);
-		selector.SetSelected(new_select);
+		if(model.select_state==SelectState.None) {
+			SelectorModel selector = model.GetSelector();
+			Point old_select = selector.GetSelected().GetCoord();
+			Point new_select = new Point(old_select.x, old_select.y +1);
+			selector.SetSelected(new_select);
+		} else if(model.select_state==SelectState.Move) {
+			System.out.println("select_state is on Move");
+			(new MoveToken(this, selected_tok, new Point(0,1))).start();
+		}
 	}
 	public void LeftPressed() {
-		SelectorModel selector = model.GetSelector();
-		Point old_select = selector.GetSelected().GetCoord();
-		Point new_select = new Point(old_select.x -1, old_select.y);
-		selector.SetSelected(new_select);
+		if(model.select_state==SelectState.None) {
+			SelectorModel selector = model.GetSelector();
+			Point old_select = selector.GetSelected().GetCoord();
+			Point new_select = new Point(old_select.x -1, old_select.y);
+			selector.SetSelected(new_select);
+		} else if(model.select_state==SelectState.Move) {
+			System.out.println("select_state is on Move");
+			(new MoveToken(this, selected_tok, new Point(-1,0))).start();
+		}
 	}
 	public void RightPressed() {
 		if(model.select_state==SelectState.None) {
@@ -80,6 +93,10 @@ public class BoardCtrl implements KeyListener {
 			//if this keystroke is to validate something then match on the Select state 
 			switch (model.select_state) {
 				case Move:
+					//we wanna unselect the actual token 
+					selected_tok = null;
+					fst_select = true;
+					model.select_state = SelectState.None;
 					break;
 				case Spell:
 					break;
@@ -95,22 +112,16 @@ public class BoardCtrl implements KeyListener {
 				//Token Selected -> we are simply gonna move it 
 				//MainTok Selected -> we offer a choice between the different powers
 			SlotModel slot = selector.GetSelected();
-			System.out.println("got the selected slot -> "+slot.GetCoord());
 			TokenModel tok = model.GetTokenFromSlot(slot);
 			if(tok!=null) {
-				System.out.println("we well got a token -> "+tok.GetRole());
 				selected_tok = tok;
 				if(selected_tok.GetRole()==TokenRole.Sorcerer || selected_tok.GetRole()==TokenRole.Sorceress) {
 					model.SetSelectState(SelectState.Spell);
 					//we also wanna update the InfoBar
-					System.out.println("Selected Main Tok");
 				} else {
 					model.SetSelectState(SelectState.Move);
 					//we also wanna update the InfoBar
-					System.out.println("Selected a Token");
 				}
-			} else {
-				System.out.println("got no token : "+ (tok==null));
 			}
 		}
 	}
@@ -122,17 +133,17 @@ public class BoardCtrl implements KeyListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode()==KeyEvent.VK_UP) {
+		if(e.getKeyCode()==KeyEvent.VK_UP && !occupied) {
 			UpPressed();
-		} else if(e.getKeyCode()==KeyEvent.VK_DOWN) {
+		} else if(e.getKeyCode()==KeyEvent.VK_DOWN && !occupied) {
 			DownPressed();
-		} else if(e.getKeyCode()==KeyEvent.VK_LEFT) {
+		} else if(e.getKeyCode()==KeyEvent.VK_LEFT && !occupied) {
 			LeftPressed();
-		} else if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
+		} else if(e.getKeyCode()==KeyEvent.VK_RIGHT && !occupied) {
 			RightPressed();
-		} else if(e.getKeyCode()==KeyEvent.VK_X) {
+		} else if(e.getKeyCode()==KeyEvent.VK_X && !occupied) {
 			SelectPressed();
-		} else if(e.getKeyCode()==KeyEvent.VK_A) {
+		} else if(e.getKeyCode()==KeyEvent.VK_A && !occupied) {
 			CancelPressed();
 		}
 	}

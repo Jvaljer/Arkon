@@ -32,7 +32,11 @@ public class TokenModel {
 	public TokenModel(BoardModel BM, Point P, TokenRole TR) {
 		board = BM;
 		pos = P;
-		moving_pos = pos;
+		//here we wanna translate the pos (in coordinates) into a moving pos (in piexels)
+		int gap = board.GetGap();
+		int slot_size = board.GetSlotSize();
+		moving_pos = new Point(gap+ (pos.x * slot_size), gap+(pos.y * slot_size));
+		
 		role = TR;
 		alive = true;
 		moving = false;
@@ -83,6 +87,7 @@ public class TokenModel {
 	}
 	
 	public void IncrementMovingPos(Point direction) {
+		//here we are incrementing pixel by pixels
 		Point old = new Point(moving_pos.x,moving_pos.y);
 		moving_pos = new Point(old.x+direction.x, old.y+direction.y);
 	}
