@@ -1,9 +1,9 @@
 package Model;
 
 import java.awt.*;
-import Types.TokenRole;
+import Types.MoveMode;
 import Types.CustomException;
-
+import Types.TokenRole;
 /**
  * Token Model class, that contains all the necessary informations and values concerning a token on the board
  * @author abel
@@ -94,5 +94,14 @@ public class TokenModel {
 	
 	public void MoveTo(Point dst) {
 		pos = dst;
+	}
+	
+	public boolean Fly() {
+		return (role.MoveMode()==MoveMode.Fly);
+	}
+	
+	public boolean MovingRules(int went_on) {
+		//must implement
+		return true;
 	}
 }

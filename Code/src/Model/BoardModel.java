@@ -8,6 +8,7 @@ import Types.TokenRole;
 
 import java.awt.*;
 import Types.CustomException;
+import Types.Direction;
 
 /**
  * Board Model class, containing all the informations related to the game's board
@@ -93,7 +94,14 @@ public class BoardModel {
 		return columns;
 	}
 	public SlotModel GetSlotFromIndex(int i, int j) {
+		//indexs are switched up with coords
 		return slots_grid.get(i).get(j);
+	}
+	public SlotModel GetSlotFromCoord(Point coord) {
+		SlotModel slot = slots_grid.get(coord.y).get(coord.x);
+		System.out.println("slot with coord : "+coord+" has been asked");
+		System.out.println("slot with coord : "+slot.GetCoord()+" has been answered");
+		return slot;
 	}
 	public int GetGap() {
 		return edge_gap;
@@ -118,26 +126,39 @@ public class BoardModel {
 	}
 	
 	public TokenModel GetTokenFromSlot(SlotModel slot) throws CustomException {
-		System.out.println("GETTOKENFROMSLOT STARTING");
 		if(TokenOnSlot(slot)) {
-			System.out.println("There's well a token on this slot ");
 			for(TokenModel tok : dark_tokens) {
 				if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
-					System.out.println("this is a black token ");
 					return tok;
 				}
 			}
 			for(TokenModel tok : light_tokens) {
 				if(tok.GetPos().x==slot.GetCoord().x && tok.GetPos().y==slot.GetCoord().y) {
-					System.out.println("this is a light token");
 					return tok;
 				}
 			}
 			
 			throw new CustomException("ERROR-> there's a token on the slot that hasn't been recognized");
 		}
-		
 		throw new CustomException("ERROR-> there is not any token on this slot");
+	}
+	
+	public TokenModel GetTokenFromCoord(Point coord) throws CustomException {
+		if(TokenOnCoord(coord)) {
+			for(TokenModel tok : dark_tokens) {
+				if(tok.GetPos().x==coord.x && tok.GetPos().y==coord.y) {
+					return tok;
+				}
+			}
+			for(TokenModel tok : light_tokens) {
+				if(tok.GetPos().x==coord.x && tok.GetPos().y==coord.y) {
+					return tok;
+				}
+			}
+			
+			throw new CustomException("ERROR-> there's a token at the coord that hasn't been recognized");
+		}
+		throw new CustomException("ERROR-> there is not any token at this coord");
 	}
 	
 	//setters
@@ -199,5 +220,42 @@ public class BoardModel {
 			}
 		}
 		return false;
+	}
+	
+	public boolean TokenOnCoord(Point coord) {
+		for(TokenModel tok : light_tokens) {
+			if(tok.GetPos().x==coord.x && tok.GetPos().y==coord.y) {
+				return true;
+			}
+		}
+		for(TokenModel tok : dark_tokens) {
+			if(tok.GetPos().x==coord.x && tok.GetPos().y==coord.y) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean CoordInBound(Point coord) {
+		return (coord.x>=0) && (coord.x<lines) && (coord.y>=0) && (coord.y<columns);
+	}
+	
+	public boolean TokenCanMove(TokenModel token, Direction direction, int went_on) throws CustomException {
+		Point nxt_coord = new Point(token.GetPos().x + direction.GetX(), token.GetPos().y + direction.GetY());
+		SlotModel nxt_slot = GetSlotFromCoord(nxt_coord);
+		boolean tok_on_slot = TokenOnSlot(nxt_slot);
+		if(tok_on_slot) {
+			TokenModel tok = GetTokenFromSlot(nxt_slot);
+			boolean fst_cond = (tok.GetRole().Side()!=token.GetRole().Side()) || (tok.GetRole().Side()==token.GetRole().Side() && token.Fly());
+			boolean snd_cond = tok.MovingRules(went_on);
+			return fst_cond && snd_cond; 
+		} else {
+			return true;
+		}
+	}
+	
+	public int CountDist(Point src, Point dst) {
+		//must implement
+		return -1;
 	}
 }

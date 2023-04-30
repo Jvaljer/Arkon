@@ -12,6 +12,7 @@ import Types.TokenRole;
 import Types.SelectState;
 import Threads.MoveToken;
 import Types.CustomException;
+import Types.Direction;
 
 public class BoardCtrl implements KeyListener {
 	private GameCtrl game;
@@ -19,9 +20,12 @@ public class BoardCtrl implements KeyListener {
 	private BoardModel model;
 	
 	private boolean fst_select;
+	private Point source_coord;
 	private TokenModel selected_tok;
 	
 	public boolean occupied;
+	public boolean can_drop;
+	public int move_cnt;
 	
 	public BoardCtrl(GameCtrl GC, BoardView BV) {
 		game = GC;
@@ -29,6 +33,8 @@ public class BoardCtrl implements KeyListener {
 		model = view.GetModel();
 		fst_select = true;
 		occupied = false;
+		can_drop = true;
+		move_cnt = 0;
 	}
 	
 	//getters
@@ -46,10 +52,19 @@ public class BoardCtrl implements KeyListener {
 			SelectorModel selector = model.GetSelector();
 			Point old_select = selector.GetSelected().GetCoord();
 			Point new_select = new Point(old_select.x, old_select.y -1);
-			selector.SetSelected(new_select);
+			if(model.CoordInBound(new_select)) {
+				selector.SetSelected(new_select);
+			}
 		} else if(model.select_state==SelectState.Move) {
-			System.out.println("select_state is on Move");
-			(new MoveToken(this, selected_tok, new Point(0,-1))).start();
+			try {
+	    		if(model.TokenCanMove(selected_tok, Direction.Up, move_cnt)) {
+					(new MoveToken(this, selected_tok, Direction.Up.Point(), source_coord)).start();
+				} else {
+					//here we wanna tell on the InfoBar that moving in that direction isn't possible
+				}
+	    	} catch (CustomException c_e) {
+	    		c_e.printStackTrace();
+	    	}
 		}
 	}
 	public void DownPressed() {
@@ -57,10 +72,19 @@ public class BoardCtrl implements KeyListener {
 			SelectorModel selector = model.GetSelector();
 			Point old_select = selector.GetSelected().GetCoord();
 			Point new_select = new Point(old_select.x, old_select.y +1);
-			selector.SetSelected(new_select);
+			if(model.CoordInBound(new_select)) {
+				selector.SetSelected(new_select);
+			}
 		} else if(model.select_state==SelectState.Move) {
-			System.out.println("select_state is on Move");
-			(new MoveToken(this, selected_tok, new Point(0,1))).start();
+			try {
+	    		if(model.TokenCanMove(selected_tok, Direction.Down, move_cnt)) {
+					(new MoveToken(this, selected_tok, Direction.Down.Point(), source_coord)).start();
+				} else {
+					//here we wanna tell on the InfoBar that moving in that direction isn't possible
+				}
+	    	} catch (CustomException c_e) {
+	    		c_e.printStackTrace();
+	    	}
 		}
 	}
 	public void LeftPressed() {
@@ -68,10 +92,19 @@ public class BoardCtrl implements KeyListener {
 			SelectorModel selector = model.GetSelector();
 			Point old_select = selector.GetSelected().GetCoord();
 			Point new_select = new Point(old_select.x -1, old_select.y);
-			selector.SetSelected(new_select);
+			if(model.CoordInBound(new_select)) {
+				selector.SetSelected(new_select);
+			}
 		} else if(model.select_state==SelectState.Move) {
-			System.out.println("select_state is on Move");
-			(new MoveToken(this, selected_tok, new Point(-1,0))).start();
+			try {
+	    		if(model.TokenCanMove(selected_tok, Direction.Left, move_cnt)) {
+					(new MoveToken(this, selected_tok, Direction.Left.Point(), source_coord)).start();
+				} else {
+					//here we wanna tell on the InfoBar that moving in that direction isn't possible
+				}
+	    	} catch (CustomException c_e) {
+	    		c_e.printStackTrace();
+	    	}
 		}
 	}
 	public void RightPressed() {
@@ -79,10 +112,19 @@ public class BoardCtrl implements KeyListener {
 			SelectorModel selector = model.GetSelector();
 			Point old_select = selector.GetSelected().GetCoord();
 			Point new_select = new Point(old_select.x +1, old_select.y);
-			selector.SetSelected(new_select);
+			if(model.CoordInBound(new_select)) {
+				selector.SetSelected(new_select);
+			}
 	    }else if(model.select_state==SelectState.Move) {
-			System.out.println("select_state is on Move");
-			(new MoveToken(this, selected_tok, new Point(1,0))).start();
+	    	try {
+	    		if(model.TokenCanMove(selected_tok, Direction.Right, move_cnt)) {
+					(new MoveToken(this, selected_tok, Direction.Right.Point(), source_coord)).start();
+				} else {
+					//here we wanna tell on the InfoBar that moving in that direction isn't possible
+				}
+	    	} catch (CustomException c_e) {
+	    		c_e.printStackTrace();
+	    	}
 		}
 	}
 	
@@ -94,10 +136,13 @@ public class BoardCtrl implements KeyListener {
 			//if this keystroke is to validate something then match on the Select state 
 			switch (model.select_state) {
 				case Move:
-					//we wanna unselect the actual token 
-					selected_tok = null;
-					fst_select = true;
-					model.select_state = SelectState.None;
+					//first we wanna check if the current slot is possible for the selected token
+					if(can_drop) {
+						selected_tok = null;
+						fst_select = true;
+						model.select_state = SelectState.None;
+						move_cnt=0;
+					}
 					break;
 				case Spell:
 					break;
@@ -121,6 +166,7 @@ public class BoardCtrl implements KeyListener {
 					//we also wanna update the InfoBar
 				} else {
 					model.SetSelectState(SelectState.Move);
+					source_coord = selected_tok.GetPos();
 					//we also wanna update the InfoBar
 				}
 			}
