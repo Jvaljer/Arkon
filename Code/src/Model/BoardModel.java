@@ -41,7 +41,7 @@ public class BoardModel {
 	
 	public BoardModel(GameModel GM, ArrayList<ArrayList<String>> map) throws CustomException {
 		game = GM;
-		
+		playing_side = 1;
 		slots_grid = new ArrayList<ArrayList<SlotModel>>();
 		
 		for(int j=0; j<9; j++) {
@@ -161,6 +161,17 @@ public class BoardModel {
 		throw new CustomException("ERROR-> there is not any token at this coord");
 	}
 	
+	public ArrayList<Point> GetNeighbors(Point pts){
+		ArrayList<Point> ret = new ArrayList<Point>();
+		for(Direction dir : Direction.values()) {
+			Point neigh = new Point(pts.x+dir.GetX(), pts.y+dir.GetY());
+			if(CoordInBound(neigh)) {
+				ret.add(neigh);
+			}
+		}
+		return ret;
+	}
+	
 	//setters
 	private void CreateTokens() {
 		//creating all basic tokens
@@ -193,7 +204,7 @@ public class BoardModel {
 		//creating 3 last tokens
 		try {
 			light_tokens.add(new TokenModel(this, new Point(0,3), TokenRole.Djinn));
-			light_tokens.add(new TokenModel(this, new Point(0,4), TokenRole.Sorcerer));
+			light_tokens.add(new TokenModel(this, new Point(0,4), TokenRole.Wizard));
 			light_tokens.add(new TokenModel(this, new Point(0,5), TokenRole.Phoenix));
 			
 			dark_tokens.add(new TokenModel(this, new Point(8,3), TokenRole.ShapeShifter));
@@ -240,22 +251,78 @@ public class BoardModel {
 		return (coord.x>=0) && (coord.x<lines) && (coord.y>=0) && (coord.y<columns);
 	}
 	
-	public boolean TokenCanMove(TokenModel token, Direction direction, int went_on) throws CustomException {
+	public boolean TokenCanMove(TokenModel token, Direction direction, Point src) throws CustomException {
 		Point nxt_coord = new Point(token.GetPos().x + direction.GetX(), token.GetPos().y + direction.GetY());
 		SlotModel nxt_slot = GetSlotFromCoord(nxt_coord);
+		if(!token.MovingRules(CountDist(src,nxt_coord))) {
+			return false;
+		}
 		boolean tok_on_slot = TokenOnSlot(nxt_slot);
 		if(tok_on_slot) {
 			TokenModel tok = GetTokenFromSlot(nxt_slot);
-			boolean fst_cond = (tok.GetRole().Side()!=token.GetRole().Side()) || (tok.GetRole().Side()==token.GetRole().Side() && token.Fly());
-			boolean snd_cond = tok.MovingRules(went_on);
-			return fst_cond && snd_cond; 
+			boolean cond = (tok.GetRole().Side()!=token.GetRole().Side()) || (tok.GetRole().Side()==token.GetRole().Side() && token.Fly());
+			return cond;
 		} else {
 			return true;
 		}
 	}
 	
-	public int CountDist(Point src, Point dst) {
-		//must implement
-		return -1;
+	public int CountDist(Point src, Point dst) throws CustomException {
+		//first we wanna get the shortest path between src and dst inside the grid 
+		Point[][] graph = new Point[lines][columns];
+		
+		HashMap<Point, Integer> dists = new HashMap<Point, Integer>();
+		HashMap<Point, Point> previous = new HashMap<Point, Point>();
+		
+		for(ArrayList<SlotModel> line : slots_grid) {
+			for(SlotModel slot : line) {
+				int x = slot.GetCoord().x;
+				int y = slot.GetCoord().y;
+				graph[x][y] = new Point(x, y);
+				dists.put(graph[x][y], Integer.MAX_VALUE);
+				previous.put(graph[x][y], null);
+			}
+		}
+		
+		dists.put(src, 0);
+		PriorityQueue<Point> unvisited = new PriorityQueue<Point>(Comparator.comparingInt(dists::get));
+		unvisited.add(src);
+		while(!unvisited.isEmpty()) {
+			Point cur = unvisited.poll();
+			if(cur==dst) {
+				break;
+			}
+			ArrayList<Point> neighs = GetNeighbors(cur);
+			for(Point neigh : neighs) {
+				int d = dists.get(cur)+1;
+				if(d<dists.get(neigh)) {
+					dists.put(neigh, d);
+					previous.put(neigh,  cur);
+					unvisited.add(neigh);
+				}
+			}
+		}
+		if(dists.get(dst)==Integer.MAX_VALUE) {
+			throw new CustomException("ERROR-> there's no such path between the indicated coordinates");
+		}
+		ArrayList<Point> path = new ArrayList<Point>();
+		Point cp = dst;
+		while(cp!=null) {
+			path.add(cp);
+			cp = previous.get(cp);
+		}
+		return path.size()-1;
+	}
+	
+	public void SwitchTurn() throws CustomException {
+		if(playing_side==0) {
+			playing_side = 1;
+			selector.SetSelected(new Point(0,4));
+		} else if(playing_side==1) {
+			playing_side = 0;
+			selector.SetSelected(new Point(8,4));
+		} else {
+			throw new CustomException("ERROR-> the playing side has an unknown value");
+		}
 	}
 }

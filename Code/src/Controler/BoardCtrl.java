@@ -57,7 +57,7 @@ public class BoardCtrl implements KeyListener {
 			}
 		} else if(model.select_state==SelectState.Move) {
 			try {
-	    		if(model.TokenCanMove(selected_tok, Direction.Up, move_cnt)) {
+	    		if(model.TokenCanMove(selected_tok, Direction.Up, source_coord)) {
 					(new MoveToken(this, selected_tok, Direction.Up.Point(), source_coord)).start();
 				} else {
 					//here we wanna tell on the InfoBar that moving in that direction isn't possible
@@ -77,7 +77,7 @@ public class BoardCtrl implements KeyListener {
 			}
 		} else if(model.select_state==SelectState.Move) {
 			try {
-	    		if(model.TokenCanMove(selected_tok, Direction.Down, move_cnt)) {
+	    		if(model.TokenCanMove(selected_tok, Direction.Down, source_coord)) {
 					(new MoveToken(this, selected_tok, Direction.Down.Point(), source_coord)).start();
 				} else {
 					//here we wanna tell on the InfoBar that moving in that direction isn't possible
@@ -97,7 +97,7 @@ public class BoardCtrl implements KeyListener {
 			}
 		} else if(model.select_state==SelectState.Move) {
 			try {
-	    		if(model.TokenCanMove(selected_tok, Direction.Left, move_cnt)) {
+	    		if(model.TokenCanMove(selected_tok, Direction.Left, source_coord)) {
 					(new MoveToken(this, selected_tok, Direction.Left.Point(), source_coord)).start();
 				} else {
 					//here we wanna tell on the InfoBar that moving in that direction isn't possible
@@ -117,7 +117,7 @@ public class BoardCtrl implements KeyListener {
 			}
 	    }else if(model.select_state==SelectState.Move) {
 	    	try {
-	    		if(model.TokenCanMove(selected_tok, Direction.Right, move_cnt)) {
+	    		if(model.TokenCanMove(selected_tok, Direction.Right, source_coord)) {
 					(new MoveToken(this, selected_tok, Direction.Right.Point(), source_coord)).start();
 				} else {
 					//here we wanna tell on the InfoBar that moving in that direction isn't possible
@@ -132,7 +132,6 @@ public class BoardCtrl implements KeyListener {
 		SelectorModel selector = model.GetSelector();
 		//if X is pressed, then we wanna know if it's the first time or not
 		if(!fst_select) {
-			System.out.println("Not the first select");
 			//if this keystroke is to validate something then match on the Select state 
 			switch (model.select_state) {
 				case Move:
@@ -142,6 +141,7 @@ public class BoardCtrl implements KeyListener {
 						fst_select = true;
 						model.select_state = SelectState.None;
 						move_cnt=0;
+						model.SwitchTurn();
 					}
 					break;
 				case Spell:
@@ -151,7 +151,6 @@ public class BoardCtrl implements KeyListener {
 					throw new CustomException("ERROR-> the select stae wasn't one of the knew ones");
 			}
 		} else {
-			System.out.println("First select");
 			//then we wanna set a state for the board 
 			//possible states are : 
 				//Token Selected -> we are simply gonna move it 
@@ -159,15 +158,17 @@ public class BoardCtrl implements KeyListener {
 			SlotModel slot = selector.GetSelected();
 			TokenModel tok = model.GetTokenFromSlot(slot);
 			if(tok!=null) {
-				fst_select = false;
-				selected_tok = tok;
-				if(selected_tok.GetRole()==TokenRole.Sorcerer || selected_tok.GetRole()==TokenRole.Sorceress) {
-					model.SetSelectState(SelectState.Spell);
-					//we also wanna update the InfoBar
-				} else {
-					model.SetSelectState(SelectState.Move);
-					source_coord = selected_tok.GetPos();
-					//we also wanna update the InfoBar
+				if(tok.GetRole().Side()==model.PlayingSide()) {
+					fst_select = false;
+					selected_tok = tok;
+					if(selected_tok.GetRole()==TokenRole.Wizard || selected_tok.GetRole()==TokenRole.Sorceress) {
+						model.SetSelectState(SelectState.Spell);
+						//we also wanna update the InfoBar
+					} else {
+						model.SetSelectState(SelectState.Move);
+						source_coord = selected_tok.GetPos();
+						//we also wanna update the InfoBar
+					}
 				}
 			}
 		}

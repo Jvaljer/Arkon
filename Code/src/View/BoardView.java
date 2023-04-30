@@ -62,10 +62,10 @@ public class BoardView extends JPanel {
 	}
 	public Color GetTurnColor() throws CustomException {
 		Color color;
-		if(model.PlayingSide()==0) {
+		if(model.PlayingSide()==1) {
 			//light is playing
 			color = new Color(255, 255, 204);
-		} else if(model.PlayingSide()==1) {
+		} else if(model.PlayingSide()==0) {
 			//dark is playing
 			color = new Color(0, 153, 0);
 		} else {

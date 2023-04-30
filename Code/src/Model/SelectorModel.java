@@ -22,7 +22,7 @@ public class SelectorModel {
 	//Constructor
 	public SelectorModel(BoardModel BM) throws CustomException {
 		board = BM;
-		selected = new SlotModel(board,null, new Point(0,0));
+		selected = new SlotModel(board,null, new Point(0,4));
 		selector_size = board.GetSlotSize();
 		switch (board.PlayingSide()) {
 			case 0:

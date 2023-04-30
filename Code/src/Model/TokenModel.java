@@ -101,7 +101,6 @@ public class TokenModel {
 	}
 	
 	public boolean MovingRules(int went_on) {
-		//must implement
-		return true;
+		return (went_on <= role.MoveLimit());
 	}
 }

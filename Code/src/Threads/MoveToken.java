@@ -49,7 +49,11 @@ public class MoveToken extends Thread {
 		} else {
 			board.can_drop = true;
 		}
-		board.move_cnt=board.GetModel().CountDist(source, destination);
+		try {
+			board.move_cnt = board.GetModel().CountDist(source, destination);
+		} catch (CustomException c_e) {
+			c_e.printStackTrace();
+		}
 		token.MoveTo(destination);
 	}
 }
