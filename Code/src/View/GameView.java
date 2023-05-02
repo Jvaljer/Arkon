@@ -48,11 +48,15 @@ public class GameView extends JFrame {
 	public BoardView GetBoard() {
 		return board;
 	}
+	public InfobarView GetInfobar() {
+		return infobar;
+	}
 	
 	@Override
 	public void paint(Graphics G) {
 		super.paint(G);
 		
 		board.Draw(G);
+		infobar.Draw(G);
 	}
 }

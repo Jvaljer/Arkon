@@ -5,11 +5,10 @@ One of my teacher told me about this retro game named "Archon: the light and the
 correctons :
 	-> must check for bugs to fix
 next features : 
-	-> implementing InfoBar 
+	-> FightScene !!!
 	-> implementing Spells
 	-> switch lumina's color on some turns
 	->
 	
 must implement rules : 
-	-> Fly token can't stop moving on ally slot
-	->
+	-> spells related rules 

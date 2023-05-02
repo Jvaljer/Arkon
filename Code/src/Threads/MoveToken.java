@@ -50,7 +50,7 @@ public class MoveToken extends Thread {
 			board.can_drop = true;
 		}
 		try {
-			board.move_cnt = board.GetModel().CountDist(source, destination);
+			board.move_cnt = board.GetModel().CountDist(source, destination, token.Fly());
 		} catch (CustomException c_e) {
 			c_e.printStackTrace();
 		}

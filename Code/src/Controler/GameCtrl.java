@@ -26,6 +26,9 @@ public class GameCtrl extends Thread {
 		(new Refresh(view)).start();
 	}
 	
+	public GameView GetView() {
+		return view;
+	}
 	public void SelectToken(SlotModel slot) {
 		//must implement
 		return;

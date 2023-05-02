@@ -98,11 +98,23 @@ public class BoardView extends JPanel {
 			}
 		}
 	}
+	//Draw method for the power slots
+	public void DrawPowerPoints(Graphics G) {
+		ArrayList<Point> power_pts = model.GetPowerPoints();
+		for(Point pts : power_pts) {
+			G.setColor(new Color(255,255,102));
+			G.drawRoundRect(model.GetGap()+(pts.x*model.GetSlotSize())+5, model.GetGap()+(pts.y*model.GetSlotSize())+5, 40, 40, 5, 5);
+			G.drawRoundRect(model.GetGap()+(pts.x*model.GetSlotSize())+7, model.GetGap()+(pts.y*model.GetSlotSize())+7, 36, 36, 5, 5);
+			G.setColor(new Color(255,255,204));
+			G.drawRoundRect(model.GetGap()+(pts.x*model.GetSlotSize())+6, model.GetGap()+(pts.y*model.GetSlotSize())+6, 38, 38, 5, 5);
+		}
+	}
 
 	//DrawMethod for the whole board
 	public void Draw(Graphics G) {
 		DrawBoard(G);
 		DrawTokens(G);
+		DrawPowerPoints(G);
 		selector.Draw(G);
 	}
 	
@@ -110,6 +122,7 @@ public class BoardView extends JPanel {
 	public void paint(Graphics G) {
 		super.paint(G);
 		DrawBoard(G);
+		DrawPowerPoints(G);
 		DrawTokens(G);
 		selector.Draw(G);
 	}

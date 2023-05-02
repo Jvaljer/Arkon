@@ -8,6 +8,7 @@ import Types.TokenRole;
 
 import java.awt.*;
 import Types.CustomException;
+import Types.Diagonal;
 import Types.Direction;
 
 /**
@@ -99,8 +100,6 @@ public class BoardModel {
 	}
 	public SlotModel GetSlotFromCoord(Point coord) {
 		SlotModel slot = slots_grid.get(coord.y).get(coord.x);
-		System.out.println("slot with coord : "+coord+" has been asked");
-		System.out.println("slot with coord : "+slot.GetCoord()+" has been answered");
 		return slot;
 	}
 	public int GetGap() {
@@ -117,6 +116,9 @@ public class BoardModel {
 	}
 	public ArrayList<TokenModel> GetDarkTokens(){
 		return dark_tokens;
+	}
+	public ArrayList<Point> GetPowerPoints(){
+		return power_points;
 	}
 	public int PlayingSide() {
 		return playing_side;
@@ -161,10 +163,27 @@ public class BoardModel {
 		throw new CustomException("ERROR-> there is not any token at this coord");
 	}
 	
-	public ArrayList<Point> GetNeighbors(Point pts){
+	public ArrayList<Point> GetGroundNeighbors(Point pts){
 		ArrayList<Point> ret = new ArrayList<Point>();
 		for(Direction dir : Direction.values()) {
 			Point neigh = new Point(pts.x+dir.GetX(), pts.y+dir.GetY());
+			if(CoordInBound(neigh)) {
+				ret.add(neigh);
+			}
+		}
+		return ret;
+	}
+	
+	public ArrayList<Point> GetFlyNeighbors(Point pts){
+		ArrayList<Point> ret = new ArrayList<Point>();
+		for(Direction dir : Direction.values()) {
+			Point neigh = new Point(pts.x+dir.GetX(), pts.y+dir.GetY());
+			if(CoordInBound(neigh)) {
+				ret.add(neigh);
+			}
+		}
+		for(Diagonal diag : Diagonal.values()) {
+			Point neigh = new Point(pts.x+diag.GetX(), pts.y+diag.GetY());
 			if(CoordInBound(neigh)) {
 				ret.add(neigh);
 			}
@@ -254,7 +273,7 @@ public class BoardModel {
 	public boolean TokenCanMove(TokenModel token, Direction direction, Point src) throws CustomException {
 		Point nxt_coord = new Point(token.GetPos().x + direction.GetX(), token.GetPos().y + direction.GetY());
 		SlotModel nxt_slot = GetSlotFromCoord(nxt_coord);
-		if(!token.MovingRules(CountDist(src,nxt_coord))) {
+		if(!token.MovingRules(CountDist(src,nxt_coord,token.Fly()))) {
 			return false;
 		}
 		boolean tok_on_slot = TokenOnSlot(nxt_slot);
@@ -267,7 +286,7 @@ public class BoardModel {
 		}
 	}
 	
-	public int CountDist(Point src, Point dst) throws CustomException {
+	public int CountDist(Point src, Point dst, boolean fly_tok) throws CustomException {
 		//first we wanna get the shortest path between src and dst inside the grid 
 		Point[][] graph = new Point[lines][columns];
 		
@@ -292,7 +311,13 @@ public class BoardModel {
 			if(cur==dst) {
 				break;
 			}
-			ArrayList<Point> neighs = GetNeighbors(cur);
+			
+			ArrayList<Point> neighs;
+			if(fly_tok) {
+				neighs = GetFlyNeighbors(cur);
+			} else {
+				neighs = GetGroundNeighbors(cur);
+			}
 			for(Point neigh : neighs) {
 				int d = dists.get(cur)+1;
 				if(d<dists.get(neigh)) {

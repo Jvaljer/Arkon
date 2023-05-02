@@ -14,7 +14,7 @@ public class InfobarModel {
 	//explanation's text
 	private String detail;
 	//geometrical values & attributes
-	private final static int panel_height = 250;
+	private final static int panel_height = 100;
 	
 	public InfobarModel(GameModel GM) {
 		game = GM;

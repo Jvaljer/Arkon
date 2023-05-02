@@ -48,12 +48,20 @@ public class BoardCtrl implements KeyListener {
 	//keystroke methods
 	public void UpPressed() {
 		if(model.select_state==SelectState.None) {
-			System.out.println("select_state is on Spell");
 			SelectorModel selector = model.GetSelector();
 			Point old_select = selector.GetSelected().GetCoord();
 			Point new_select = new Point(old_select.x, old_select.y -1);
 			if(model.CoordInBound(new_select)) {
 				selector.SetSelected(new_select);
+				if(model.TokenOnCoord(new_select)) {
+					try {
+						game.GetView().GetInfobar().Update(model.GetTokenFromCoord(new_select));
+					} catch (CustomException c_e) {
+						c_e.printStackTrace();
+					}
+				} else {
+					game.GetView().GetInfobar().Clear();
+				}
 			}
 		} else if(model.select_state==SelectState.Move) {
 			try {
@@ -74,7 +82,17 @@ public class BoardCtrl implements KeyListener {
 			Point new_select = new Point(old_select.x, old_select.y +1);
 			if(model.CoordInBound(new_select)) {
 				selector.SetSelected(new_select);
+				if(model.TokenOnCoord(new_select)) {
+					try {
+						game.GetView().GetInfobar().Update(model.GetTokenFromCoord(new_select));
+					} catch (CustomException c_e) {
+						c_e.printStackTrace();
+					}
+				} else {
+					game.GetView().GetInfobar().Clear();
+				}
 			}
+			
 		} else if(model.select_state==SelectState.Move) {
 			try {
 	    		if(model.TokenCanMove(selected_tok, Direction.Down, source_coord)) {
@@ -94,6 +112,15 @@ public class BoardCtrl implements KeyListener {
 			Point new_select = new Point(old_select.x -1, old_select.y);
 			if(model.CoordInBound(new_select)) {
 				selector.SetSelected(new_select);
+				if(model.TokenOnCoord(new_select)) {
+					try {
+						game.GetView().GetInfobar().Update(model.GetTokenFromCoord(new_select));
+					} catch (CustomException c_e) {
+						c_e.printStackTrace();
+					}
+				} else {
+					game.GetView().GetInfobar().Clear();
+				}
 			}
 		} else if(model.select_state==SelectState.Move) {
 			try {
@@ -114,6 +141,15 @@ public class BoardCtrl implements KeyListener {
 			Point new_select = new Point(old_select.x +1, old_select.y);
 			if(model.CoordInBound(new_select)) {
 				selector.SetSelected(new_select);
+				if(model.TokenOnCoord(new_select)) {
+					try {
+						game.GetView().GetInfobar().Update(model.GetTokenFromCoord(new_select));
+					} catch (CustomException c_e) {
+						c_e.printStackTrace();
+					}
+				} else {
+					game.GetView().GetInfobar().Clear();
+				}
 			}
 	    }else if(model.select_state==SelectState.Move) {
 	    	try {
@@ -137,11 +173,14 @@ public class BoardCtrl implements KeyListener {
 				case Move:
 					//first we wanna check if the current slot is possible for the selected token
 					if(can_drop) {
-						selected_tok = null;
+						//we wanna check if the selected token has well moved or not
 						fst_select = true;
 						model.select_state = SelectState.None;
 						move_cnt=0;
-						model.SwitchTurn();
+						if(!(selected_tok.GetPos().x==source_coord.x && selected_tok.GetPos().y==source_coord.y)) {
+							model.SwitchTurn();
+						}
+						selected_tok = null;
 					}
 					break;
 				case Spell:
