@@ -10,6 +10,7 @@ import Model.BoardModel;
 import Model.TokenModel;
 import Types.TokenRole;
 import Types.SelectState;
+import Threads.LaunchFightScene;
 import Threads.MoveToken;
 import Types.CustomException;
 import Types.Direction;
@@ -26,6 +27,8 @@ public class BoardCtrl implements KeyListener {
 	public boolean occupied;
 	public boolean can_drop;
 	public int move_cnt;
+	public boolean start_fight;
+	private boolean fighting;
 	
 	public BoardCtrl(GameCtrl GC, BoardView BV) {
 		game = GC;
@@ -34,6 +37,8 @@ public class BoardCtrl implements KeyListener {
 		fst_select = true;
 		occupied = false;
 		can_drop = true;
+		start_fight = false;
+		fighting = false;
 		move_cnt = 0;
 	}
 	
@@ -56,7 +61,7 @@ public class BoardCtrl implements KeyListener {
 				if(model.TokenOnCoord(new_select)) {
 					try {
 						game.GetView().GetInfobar().Update(model.GetTokenFromCoord(new_select));
-					} catch (CustomException c_e) {
+					} catch (CustomException c_e){
 						c_e.printStackTrace();
 					}
 				} else {
@@ -179,6 +184,13 @@ public class BoardCtrl implements KeyListener {
 						move_cnt=0;
 						if(!(selected_tok.GetPos().x==source_coord.x && selected_tok.GetPos().y==source_coord.y)) {
 							model.SwitchTurn();
+						}
+						//now we wanna check if we'll start a fight or not (the turn has already switched yes)
+						if(start_fight){
+							//let's define all fighting attributes
+							
+							(new LaunchFightScene(selected_tok)).start();
+							fighting = true;
 						}
 						selected_tok = null;
 					}

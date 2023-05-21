@@ -43,11 +43,13 @@ public class MoveToken extends Thread {
 		if(board.GetModel().TokenOnCoord(destination)) {
 			try {
 				board.can_drop = board.GetModel().GetTokenFromCoord(destination).GetRole().Side()!=token.GetRole().Side();
+				board.start_fight = true;
 			} catch (CustomException c_e) {
 				c_e.printStackTrace();
 			}
 		} else {
 			board.can_drop = true;
+			board.start_fight = false;
 		}
 		try {
 			board.move_cnt = board.GetModel().CountDist(source, destination, token.Fly());
